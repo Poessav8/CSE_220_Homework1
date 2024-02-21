@@ -15,7 +15,7 @@ void print_packet_sf(unsigned char packet[])
     uint16_t frag_offset = ((uint16_t)packet[8] << 6) | ((uint16_t)packet[9] >> 2) ;
     uint16_t packet_len = (((uint16_t)packet[9] & 0x03) << 12) | (uint16_t)packet[10] << 4 | (uint16_t)packet[11]>>4;
     uint8_t max_hc = ((uint8_t)packet[11] & 0x0f) << 1 | (uint8_t)packet[12] >> 7;
-    uint32_t checksum = ((uint32_t)packet[12] & ~0x80) <<16 | (u_int32_t)packet[13] <<8 | (uint32_t)packet[14];
+    uint32_t checksum = ((uint32_t)packet[12] & ~0x80) <<16 | (uint32_t)packet[13] <<8 | (uint32_t)packet[14];
     uint8_t comp_scheme = (uint8_t)packet[15] >> 6;
     uint8_t traffic_class = (uint8_t)packet[15] & ~0xc0;
 
@@ -156,7 +156,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
 
     unsigned int start = 0;
     unsigned int payload_len = 0;
-    unsigned int num_packets = (array_len / (max_payload/sizeof(int))) +1; //correct
+    unsigned int num_packets =((array_len % (max_payload/sizeof(int)))==0)? (array_len / (max_payload/sizeof(int))):(array_len / (max_payload/sizeof(int))) +1; //correct
     //don't exceed capacity of array
     if(num_packets > packets_len){
         num_packets = packets_len;
